@@ -1,0 +1,133 @@
+﻿<RibbonWindow x:Class="WpfProxyTool.MainWindowView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon"
+              xmlns:local="clr-namespace:WpfProxyTool.ViewModel"
+              Title="Proxyfighter by Eisfuchs" 
+              Height="450" 
+              Width="725" 
+              Icon="../Images/ice.png" 
+              MinHeight="450"
+              MinWidth="725"
+              x:Name="mainWindow">
+
+    <!--http://www.norberteder.com/windows-presentation-foundation-45-das-ribbon-steuerelement/-->
+    <DockPanel LastChildFill="True">
+        
+        <DockPanel.DataContext>
+            <local:MainViewModel />
+        </DockPanel.DataContext>
+
+        <ribbon:Ribbon DockPanel.Dock="Top">
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu SmallImageSource="../Images/AppMenu.png" >
+                    <RibbonApplicationMenuItem Header="Neuer Beitrag"
+                                               ImageSource="../Images/new.png" />
+                    <RibbonApplicationMenuItem Header="Lokalen Entwurf öffnen"
+                                               ImageSource="../Images/Open.png" />
+                    <RibbonApplicationMenuItem Header="Aktuellen Beitrag öffnen"
+                                               ImageSource="../Images/openWeb.png" />
+                    <RibbonApplicationMenuItem Header="Speichern"
+                                               ImageSource="../Images/Save.png" />
+                    <RibbonApplicationMenuItem Header="Lokalen Beitrag löschen"/>
+                    <RibbonApplicationMenuItem Header="Veröffentlichen"/>
+                    <RibbonApplicationMenuItem Header="Drucken"/>
+                    <RibbonApplicationMenuItem Header="Optionen"/>
+                    <RibbonApplicationMenuItem Header="Info" Name="btnInfo" />
+                    <RibbonApplicationMenuItem Header="Beenden" />
+
+                    <RibbonApplicationMenu.FooterPaneContent>
+                        <RibbonButton Label="Exit"
+                                      SmallImageSource="../Images/exit.png"
+                                      HorizontalAlignment="Right" />
+                    </RibbonApplicationMenu.FooterPaneContent>
+                    <RibbonApplicationMenu.AuxiliaryPaneContent>
+                        <RibbonGallery CanUserFilter="False"
+                                       ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <RibbonGalleryCategory Background="Transparent"
+                                                   MaxColumnCount="1">
+                                <RibbonGalleryItem Content="Aktualisierung einer Datenbindung verzögern"/>
+                                <RibbonGalleryItem Content="Informationen einer BindingExpression beziehen"/>
+                                <RibbonGalleryItem Content="Bindung an statische Eigenschaften"/>
+                                <RibbonGalleryItem Content="Neue Funktionen der Klasse VirtualizingPanel"/>
+                                <RibbonGalleryItem Content="Das Ribbon-Steuerelement"/>
+                            </RibbonGalleryCategory>
+                        </RibbonGallery>
+                    </RibbonApplicationMenu.AuxiliaryPaneContent>
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+
+            <Ribbon.HelpPaneContent>
+                <RibbonButton Content="Hilfe"
+                              SmallImageSource="../Images/help.png" />
+            </Ribbon.HelpPaneContent>
+
+            <RibbonTab Header="Proxy Leecher">
+                <RibbonGroup Header="Clipboard and List">
+                    <RibbonButton Label="Open List"
+                                  LargeImageSource="../Images/Open.png" />
+                    <RibbonButton Label="Paste"
+                                  LargeImageSource="../Images/paste.png" />
+                    <RibbonButton Label="Delete All"
+                                  SmallImageSource="../Images/delete.png" />
+                    <RibbonButton Label="Delete Selected"
+                                  SmallImageSource="../Images/deleteSel.png" />
+                </RibbonGroup>
+                <RibbonGroup Header="Tool">
+                    <RibbonButton Label="Start Leeching"
+                                  Name="btnStartLeeching"
+                                  LargeImageSource="../Images/start.png" />
+                    <RibbonButton Label="Stop"
+                                  SmallImageSource="../Images/stop.png"
+                                  IsEnabled="False"/>
+                    <RibbonTextBox Label="Timeout:"
+                                   TextBoxWidth="30"
+                                   Text="5"
+                                   TextAlignment="Right"/>
+                </RibbonGroup>
+                <RibbonGroup Header="List Options">
+                    <RibbonButton Label="Order by URL"
+                                  SmallImageSource="../Images/arrow_updown.png" />
+                    <RibbonButton Label="Order by Proxys"
+                                  SmallImageSource="../Images/arrow_updown.png" />
+                    <RibbonButton Label="Order by Reply"
+                                  SmallImageSource="../Images/arrow_updown.png" />
+                </RibbonGroup>
+            </RibbonTab>
+            <RibbonTab Header="Proxylist">
+
+            </RibbonTab>
+            <RibbonTab Header="Blogkonto">
+
+            </RibbonTab>
+        </ribbon:Ribbon>
+
+        <DockPanel VerticalAlignment="Stretch"
+                   HorizontalAlignment="Stretch"
+                   Height="Auto">
+            <!--Content...-->
+            <DataGrid x:Name="dataGridLeecher" 
+                      AllowDrop="True" 
+                      AutoGenerateColumns="False"
+                      ItemsSource="{Binding Path=leechList, Mode=TwoWay}"
+                      IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="URL" 
+                                        Width="200*"
+                                        MinWidth="200"
+                                        Binding="{Binding Path=URL, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="Reply" 
+                                        Width="100" 
+                                        Binding="{Binding Path=Reply, Mode=OneWay}"/>
+                    <DataGridTextColumn Header="Proxy Count" 
+                                        Width="100" 
+                                        Binding="{Binding Path=Count, Mode=OneWay}"/>
+                    <DataGridTextColumn Header="Date" 
+                                        Width="150" 
+                                        Binding="{Binding Path=Date, StringFormat='dd.MM.yyyy hh:ss', Mode=OneWay}" />
+                </DataGrid.Columns>
+                
+            </DataGrid>
+        </DockPanel>
+    </DockPanel>
+    </RibbonWindow>
