@@ -26,10 +26,5 @@ namespace WpfProxyTool
         {
             InitializeComponent();
         }
-
-        private void dataGridLeecher_Drop(object sender, DragEventArgs e)
-        {
-            String file = e.Data.GetData(DataFormats.Text) as string;
-        }
     }
 }

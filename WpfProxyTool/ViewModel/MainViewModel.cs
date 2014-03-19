@@ -6,6 +6,8 @@ using WpfProxyTool.Model;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace WpfProxyTool.ViewModel
 {
@@ -24,6 +26,7 @@ namespace WpfProxyTool.ViewModel
     public class MainViewModel : ViewModelBase
     {
         public ObservableCollection<ProxyLeecherModel> leechList { get; set; }
+        private static object listLock = new object();
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -31,6 +34,7 @@ namespace WpfProxyTool.ViewModel
         public MainViewModel()
         {
             leechList = new ObservableCollection<ProxyLeecherModel>();
+            BindingOperations.EnableCollectionSynchronization(leechList, listLock);
             /*
             leechList.Add(new ProxyLeecherModel
                 {
@@ -66,7 +70,7 @@ namespace WpfProxyTool.ViewModel
             ofd.InitialDirectory = @"C:\";
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                readLeechFile(ofd.FileName);
+                Task.Factory.StartNew( () => readLeechFile(ofd.FileName));
                 //MessageBox.Show(ofd.FileName);
             }
         }
@@ -82,7 +86,7 @@ namespace WpfProxyTool.ViewModel
                     {
                         URL = match.ToString()
                     }
-                    );
+                );
             }
         }
 
@@ -96,6 +100,8 @@ namespace WpfProxyTool.ViewModel
         }
         private void dataGridLeecherDrop(DragEventArgs e)
         {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            Task.Factory.StartNew(() => readLeechFile(files[0]));
             // do something here
         }
     }
