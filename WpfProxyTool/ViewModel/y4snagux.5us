@@ -3,9 +3,8 @@ using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections.Generic;
 using WpfProxyTool.Model;
+using System.Windows.Forms;
 using System.Text.RegularExpressions;
-using System.Collections.ObjectModel;
-using System.Windows;
 
 namespace WpfProxyTool.ViewModel
 {
@@ -23,20 +22,19 @@ namespace WpfProxyTool.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        public ObservableCollection<ProxyLeecherModel> leechList { get; set; }
+        public List<ProxyLeecherModel> leechList { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         public MainViewModel()
         {
-            leechList = new ObservableCollection<ProxyLeecherModel>();
-            /*
+            leechList = new List<ProxyLeecherModel>();
             leechList.Add(new ProxyLeecherModel
                 {
                     URL = "http://google.de"
                 });
-            */
+
             ////if (IsInDesignMode)
             ////{
             ////    // Code runs in Blend --> create design time data.
@@ -62,9 +60,9 @@ namespace WpfProxyTool.ViewModel
 
         private void openLeechListExecuted()
         {
-            System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
+            OpenFileDialog ofd = new OpenFileDialog();
             ofd.InitialDirectory = @"C:\";
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 readLeechFile(ofd.FileName);
                 //MessageBox.Show(ofd.FileName);
@@ -74,29 +72,8 @@ namespace WpfProxyTool.ViewModel
         private void readLeechFile(String path)
         {
             string file = System.IO.File.ReadAllText(path);
-            Regex regex = new Regex(@"\b(((\S+)?)(@|mailto\:|(news|(ht|f)tp(s?))\://)\S+)\b");
+            Regex regex = new Regex(@"^http\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$");
             MatchCollection matches = regex.Matches(file);
-            foreach (Match match in matches)
-            {
-                leechList.Add(new ProxyLeecherModel
-                    {
-                        URL = match.ToString()
-                    }
-                    );
-            }
-        }
-
-        private RelayCommand<DragEventArgs> dataGridLeecherDropCommand;
-        public RelayCommand<DragEventArgs> DataGridLeecherDropCommand
-        {
-            get
-            {
-                return dataGridLeecherDropCommand ?? (dataGridLeecherDropCommand = new RelayCommand<DragEventArgs>(dataGridLeecherDrop));
-            }
-        }
-        private void dataGridLeecherDrop(DragEventArgs e)
-        {
-            // do something here
         }
     }
 }

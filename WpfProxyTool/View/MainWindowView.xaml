@@ -3,6 +3,8 @@
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon"
               xmlns:local="clr-namespace:WpfProxyTool.ViewModel"
+              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+              xmlns:cmd="http://www.galasoft.ch/mvvmlight"
               Title="Proxyfighter by Eisfuchs" 
               Height="450" 
               Width="725" 
@@ -65,7 +67,8 @@
             <RibbonTab Header="Proxy Leecher">
                 <RibbonGroup Header="Clipboard and List">
                     <RibbonButton Label="Open List"
-                                  LargeImageSource="../Images/Open.png" />
+                                  LargeImageSource="../Images/Open.png"
+                                  Command="{Binding Path=OpenLeechListCommand}"/>
                     <RibbonButton Label="Paste"
                                   LargeImageSource="../Images/paste.png" />
                     <RibbonButton Label="Delete All"
@@ -109,8 +112,8 @@
             <DataGrid x:Name="dataGridLeecher" 
                       AllowDrop="True" 
                       AutoGenerateColumns="False"
-                      ItemsSource="{Binding Path=leechList, Mode=TwoWay}"
-                      IsReadOnly="True">
+                      ItemsSource="{Binding Path=leechList}"
+                      IsReadOnly="True" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="URL" 
                                         Width="200*"
@@ -126,7 +129,12 @@
                                         Width="150" 
                                         Binding="{Binding Path=Date, StringFormat='dd.MM.yyyy hh:ss', Mode=OneWay}" />
                 </DataGrid.Columns>
-                
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Drop">
+                        <cmd:EventToCommand Command="{Binding DataGridLeecherDropCommand}"
+                                            PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </DataGrid>
         </DockPanel>
     </DockPanel>

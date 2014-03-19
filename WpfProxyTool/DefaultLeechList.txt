@@ -1,0 +1,148 @@
+﻿# FPL Forum List (2014-03-17)
+# Format: forum link|topic link characteristic|whether scan attachment|attachment link characteristic
+# FPL 1.05 can read the comments begined with "##"
+
+# If you are not familar with the FPL Formal List format, please refer to this topic first:
+# How to add new forums to FPL list: http://forum.my-proxy.com/viewtopic.php?t=8
+
+# If you know other proxy sites, please share them with us at http://forum.my-proxy.com
+# About the ranks, please refer to our Leech List Statistics Report: http://fpl.my-proxy.com/liststat.php
+
+## Rank 1, Forum, Http Anon & Elite Proxies Daily
+http://proxy-masterz.com/vb/f3/|#post|0
+
+## Rank 2, Forum, Free Public Proxy Lists, need login
+http://www.proxyfire.net/forum/forumdisplay.php?f=14|showthread.php?t=|0
+
+## Rank 3, Non-forum, Proxy List / Anonymous (update every hour)
+http://www.cybersyndrome.net|pl|0
+
+## Rank 4, Non-forum, Fresh Proxies
+http://elite-proxies.blogspot.com/
+
+## Rank 5, Non-forum, Fresh Proxies
+http://www.proxies.cz.cc/
+
+## Rank 6, Non-forum, Fresh Proxies
+http://www.proxydb.ru/News.aspx|HTTP|0
+
+## Rank 7, Forum, Anonymous Proxy
+http://www.hayatforumda.com/anonymous-proxy/|#post|0
+
+## Rank 8, Non-forum, Fresh Proxies
+http://proxy.ipcn.org/proxylist2.html
+
+## Rank 9, Forum, Fresh Proxy Forum
+http://www.dlnxt.com/f42-proxies/|#post|0
+
+## Rank 10, Forum, Proxies, Need scanning attachments
+http://www.lawinaboard.com/forums/index.php?showforum=8|showtopic=|1|act=Attach
+
+## Rank 11, Forum, High anonymous (Elite) HTTP proxies
+http://www.final4ever.com/forumdisplay.php?f=144|showthread.php?t=|0
+
+## Rank 12, Non-forum, Fresh Proxies Blog
+http://www.proxyvadi.net/proxy-list|-listesi-|0
+
+## Rank 13, Non-forum, Only Anonymous Proxy
+http://proxy.speedtest.at/proxyOnlyAnonymous.php?offset=0|offset|0
+
+## Rank 14, Forum, Fresh Proxy Forum
+http://www.forum.freeproxy.ru/viewforum.php?f=5|viewtopic.php?t=|0
+
+## Rank 15, Non-forum, Fresh Proxy Blog
+http://globalproxies.blogspot.com/
+
+## Rank 16, Non-forum, All working proxies
+http://www.free-proxy-list.ru/free-proxy-list/all-working-proxies.php
+
+## Rank 17, Non-forum, Fresh Proxies
+http://en.soks.biz/?free
+
+## Rank 18, Non-forum, Fresh Proxies
+http://bulkinfo.net/Proxy|/Proxy/Article/|0
+
+## Rank 19, Non-forum, Transparent proxies
+http://www.freeproxy.ch/proxy.txt
+
+## Rank 20, Non-forum, Anonymous Proxy Lists
+http://www.hackingballz.com/lista_proxys_anonimos|lista_proxys_anonimos/|0
+
+## Rank 21, Non-forum, Fresh Proxies
+http://www.3ghttp.com/daili/zxhttp/|daili/zxhttp/|0
+
+## Rank 22, Non-forum, Fresh Proxies
+http://mmm-downloads.at.ua/blog
+
+## Rank 23, Non-forum, Http proxy (10 pages), College proxy (2 pages)
+http://www.cnproxy.com|proxy|0
+
+## Rank 24, Non-forum, Proxy list
+http://www.textproxylists.com/proxy.php?allproxy
+
+## Rank 25, Non-forum, Fresh Proxies
+http://anon-proxy.ru/|html|0
+
+## Rank 26, Forum, Need login
+http://www.golden-joint.com/index.php?showforum=42|showtopic=|0
+
+## Rank 27, Non-forum, Proxy list
+http://proxy-heaven.blogspot.com/
+
+## Rank 28, Non-forum, Fresh Proxies
+http://www.rmccurdy.com/scripts/proxy/good.txt
+
+## Rank 29, Forum, Black Hat SEO Proxies, Need Login
+http://www.blackhatteam.com/f120/|f120|0
+
+## Rank 30, Non-forum, Full Proxy Lists
+http://www.checkedproxylists.com/proxylists_full.html|proxylist_full_|0
+
+## Rank 31, Non-forum, HTTP Proxy Server Lists
+http://www.proxiesatwork.com/proxylist.php|page=|0
+
+## Rank 32, Non-forum, Fresh Proxies
+http://www.cool-proxy.net/index.php?action=proxy-list|page=|0
+
+## Rank 33, Non-forum, Http high anonymous proxy list
+http://proxylists.net/http_highanon.txt
+
+## Rank 34, Non-forum, Fresh Proxies
+http://www.ip-adress.com/proxy_list/?k=type
+
+## Rank 35, Non-forum, Fresh Proxies
+http://wapland.org/proxy/proxy.txt
+
+## Rank 36, Non-forum, Different anonymities of proxies (8 pages)
+http://en.proxy.net.pl/fresh.html|proxy|0
+
+## Rank 37, Non-forum, Checked proxy list (about 50 pages)
+http://www.proxybase.de/en/list-0.htm|list-|0
+
+## Rank 38, Non-forum, This list is updated every 15 minutes.
+http://www.proxylists.net/proxylist.shtml?HTTP
+
+## Rank 39, Non-forum, Proxy Lists (10 Pages)
+http://www.cooleasy.com/|page=|0
+
+## Rank 40, Forum, Anonymous HTTP proxies
+http://community.aliveproxy.com/forums/8.aspx|/forums/t/|0
+
+## Rank 41, Non-forum, 30 proxy pages
+http://www.haozs.net/Class.asp?ID=17|/Html/?|0
+
+## Rank 42, Non-forum, Fresh Proxies
+http://proxy-hunter.blogspot.com/feeds/posts/default
+
+## Rank 43, Non-forum, 300 updated proxies
+http://freeproxylists.co
+
+## Rank 44, Non-forum, Fresh Proxies
+http://best-proxy.ru/feed
+
+## Rank 45, Non-forum, Fresh Proxies
+http://fineproxy.ru/
+
+## Rank 46, Forum, Transparent proxies
+http://community.aliveproxy.com/forums/11.aspx|/t/|0
+

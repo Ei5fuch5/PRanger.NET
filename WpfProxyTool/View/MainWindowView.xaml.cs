@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Controls.Ribbon;
+using System.IO;
 
 namespace WpfProxyTool
 {
@@ -24,6 +25,11 @@ namespace WpfProxyTool
         public MainWindowView()
         {
             InitializeComponent();
+        }
+
+        private void dataGridLeecher_Drop(object sender, DragEventArgs e)
+        {
+            String file = e.Data.GetData(DataFormats.Text) as string;
         }
     }
 }
