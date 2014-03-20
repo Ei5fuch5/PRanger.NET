@@ -8,6 +8,11 @@ namespace WpfProxyTool.Model
 {
     public class ProxyLeecherModel : System.ComponentModel.INotifyPropertyChanged
     {
+        public ProxyLeecherModel()
+        {
+            proxys = new List<string>();
+        }
+
         // Need to notify the WPF elements if any of the properties changed on a Person object
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
@@ -74,6 +79,20 @@ namespace WpfProxyTool.Model
             {
                 date = value;
                 OnPropertyChanged("Date");
+            }
+        }
+
+        private List<String> proxys;
+        public List<String> Proxys
+        {
+            get
+            {
+                return proxys;
+            }
+            set
+            {
+                proxys = value;
+                OnPropertyChanged("Proxys");
             }
         }
     }

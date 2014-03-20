@@ -79,13 +79,14 @@
                 <RibbonGroup Header="Tool">
                     <RibbonButton Label="Start Leeching"
                                   Name="btnStartLeeching"
-                                  LargeImageSource="../Images/start.png" />
+                                  LargeImageSource="../Images/start.png"
+                                  Command="{Binding Path=StartLeechingCommand}"/>
                     <RibbonButton Label="Stop"
                                   SmallImageSource="../Images/stop.png"
                                   IsEnabled="False"/>
                     <RibbonTextBox Label="Timeout:"
                                    TextBoxWidth="30"
-                                   Text="5"
+                                   Text="{Binding Path=LeechTimeout, Mode=TwoWay}"
                                    TextAlignment="Right"/>
                 </RibbonGroup>
                 <RibbonGroup Header="List Options">
@@ -127,7 +128,7 @@
                                         Binding="{Binding Path=Count, Mode=OneWay}"/>
                     <DataGridTextColumn Header="Date" 
                                         Width="150" 
-                                        Binding="{Binding Path=Date, StringFormat='dd.MM.yyyy hh:ss', Mode=OneWay}" />
+                                        Binding="{Binding Path=Date, StringFormat='dd.MM.yyyy HH:ss', Mode=OneWay}" />
                 </DataGrid.Columns>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">

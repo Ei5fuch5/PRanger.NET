@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.IO;
+using System.Net;
 
 namespace WpfProxyTool.ViewModel
 {
@@ -28,6 +30,20 @@ namespace WpfProxyTool.ViewModel
         public ObservableCollection<ProxyLeecherModel> leechList { get; set; }
         private static object listLock = new object();
 
+        private string leechTimeout;
+        public string LeechTimeout
+        {
+            get
+            {
+                return leechTimeout;
+            }
+            set
+            {
+                leechTimeout = value;
+                OnPropertyChanged("LeechTimeout");
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -35,6 +51,7 @@ namespace WpfProxyTool.ViewModel
         {
             leechList = new ObservableCollection<ProxyLeecherModel>();
             BindingOperations.EnableCollectionSynchronization(leechList, listLock);
+            leechTimeout = "5";
             /*
             leechList.Add(new ProxyLeecherModel
                 {
@@ -51,6 +68,15 @@ namespace WpfProxyTool.ViewModel
             ////}
         }
 
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+        
         private RelayCommand openLeechListCommand;
         public RelayCommand OpenLeechListCommand
         {
@@ -78,7 +104,7 @@ namespace WpfProxyTool.ViewModel
         private void readLeechFile(String path)
         {
             string file = System.IO.File.ReadAllText(path);
-            Regex regex = new Regex(@"\b(((\S+)?)(@|mailto\:|(news|(ht|f)tp(s?))\://)\S+)\b");
+            Regex regex = new Regex(@"(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?");
             MatchCollection matches = regex.Matches(file);
             foreach (Match match in matches)
             {
@@ -103,6 +129,70 @@ namespace WpfProxyTool.ViewModel
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             Task.Factory.StartNew(() => readLeechFile(files[0]));
             // do something here
+        }
+
+
+        private RelayCommand startLeechingCommand;
+        public RelayCommand StartLeechingCommand
+        {
+            get
+            {
+                {
+                    if (startLeechingCommand == null)
+                        startLeechingCommand = new RelayCommand(new Action(startLeechingExecuted));
+                    return startLeechingCommand;
+                }
+            }
+        }
+
+        private async void startLeechingExecuted()
+        {
+            MessageBox.Show(leechTimeout);
+            foreach (ProxyLeecherModel item in leechList)
+            {
+                WebContent source = new WebContent();
+                source = await getURLContentAsync(item.URL);
+
+                string content = System.Text.Encoding.Default.GetString(source.content);
+                item.Proxys.Add(content);
+                item.Date = DateTime.Now;
+                item.Count = source.content.Length;
+                item.Reply = source.status;
+            }
+            
+        }
+
+        private async Task<WebContent> getURLContentAsync(string url)
+        {
+            WebContent result = new WebContent();
+            try
+            {
+                var content = new MemoryStream();
+                var webReq = (HttpWebRequest)WebRequest.Create(url);
+                using (WebResponse response = await webReq.GetResponseAsync())
+                {
+                    using (Stream responseStream = response.GetResponseStream())
+                    {
+                        await responseStream.CopyToAsync(content);
+                        result.content = content.ToArray();
+                        result.status = ((HttpWebResponse)response).StatusCode.ToString();
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                result.content = new byte[0];
+                if (ex.Response != null)
+                {
+                    var resp = (HttpWebResponse)ex.Response;
+                    result.status = resp.StatusCode.ToString();
+                }
+                else
+                {
+                    result.status = "Not Found";
+                }
+            }
+            return result;
         }
     }
 }
