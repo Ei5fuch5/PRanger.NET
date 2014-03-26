@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WpfProxyTool.Model
 {
-    public class ProxyLeecherModel : System.ComponentModel.INotifyPropertyChanged
+    public class ProxyLeechListModel : System.ComponentModel.INotifyPropertyChanged
     {
-        public ProxyLeecherModel()
+        public ProxyLeechListModel()
         {
             proxys = new List<string>();
         }

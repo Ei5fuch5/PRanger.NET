@@ -31,6 +31,21 @@ namespace WpfProxyTool.ViewModel
         public LeecherModel leechModel { get; set; }
         private static object listLock = new object();
 
+        private string leechTimeout;
+        public string LeechTimeout
+        {
+            get
+            {
+                return leechTimeout;
+            }
+            set
+            {
+                leechTimeout = value;
+                OnPropertyChanged("LeechTimeout");
+            }
+        }
+
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -38,11 +53,14 @@ namespace WpfProxyTool.ViewModel
         {
             leechList = new ObservableCollection<ProxyLeechListModel>();
             BindingOperations.EnableCollectionSynchronization(leechList, listLock);
-            leechModel = new LeecherModel();
-            leechModel.LeechTimeout = "5";
-            leechModel.LeechStartButtonEnabled = true;
-            leechModel.ProgressBarEnabled = false;
-
+            leechTimeout = "5";
+            leechMode.LeechStartButtonEnabled = true;
+            /*
+            leechList.Add(new ProxyLeecherModel
+                {
+                    URL = "http://google.de"
+                });
+            */
             ////if (IsInDesignMode)
             ////{
             ////    // Code runs in Blend --> create design time data.
@@ -53,6 +71,15 @@ namespace WpfProxyTool.ViewModel
             ////}
         }
 
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+        
         private RelayCommand openLeechListCommand;
         public RelayCommand OpenLeechListCommand
         {
@@ -80,7 +107,6 @@ namespace WpfProxyTool.ViewModel
         private void readLeechFile(String path)
         {
             string file = System.IO.File.ReadAllText(path);
-            // http://regexlib.com/Search.aspx?k=url&AspxAutoDetectCookieSupport=1
             Regex regex = new Regex(@"(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?");
             MatchCollection matches = regex.Matches(file);
             foreach (Match match in matches)
@@ -103,9 +129,9 @@ namespace WpfProxyTool.ViewModel
         }
         private void dataGridLeecherDrop(DragEventArgs e)
         {
-            // http://stackoverflow.com/questions/11671803/get-source-of-a-dragdrop
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             Task.Factory.StartNew(() => readLeechFile(files[0]));
+            // do something here
         }
 
 
@@ -124,19 +150,9 @@ namespace WpfProxyTool.ViewModel
 
         private void startLeechingExecuted()
         {
-            leechModel.LeechStartButtonEnabled = false;
-            leechModel.ProgressBarEnabled = true;
+            LeechStartButtonEnabled = false;
+            OnPropertyChanged("LeechStartButtonEnabled");
 
-            taskForEach(5);
-            //parallelForEach();
-
-            //leechModel.ProgressBarEnabled = false;
-            //leechStartButtonEnabled = true;
-        }
-
-        private void parallelForEach()
-        {
-            // Solution? http://stackoverflow.com/questions/12337671/using-async-await-for-multiple-tasks
             Parallel.ForEach(leechList, async item =>
                 {
                     WebContent source = new WebContent();
@@ -149,56 +165,17 @@ namespace WpfProxyTool.ViewModel
                     item.Reply = source.status;
                 }
             );
-        }
-
-        private void taskForEach(int taskCount)
-        {
-            // http://msdn.microsoft.com/de-de/library/dd270695%28v=vs.110%29.aspx
-            // Problem mit Async
-            //for (int i = 0; i < leechList.Count; i+=taskCount - 1)
-            for (int i = 0; i < 4; i += 5)
-            {
-                List<ProxyLeechListModel> items = new List<ProxyLeechListModel>();
-                for (int t = i; t < i + taskCount; t++)
-                {
-                    items.Add(leechList[t]);
-                }
-
-                Task[] tasks = new Task[4];
-                for (int v = 0; v < taskCount - 1; v++)
-                {
-                    if (v == 5 ) 
-                        MessageBox.Show("Ist 5!!!!");
-                    if (v < items.Count)
-                    {
-                        tasks[v] = new Task(() => makeTaskRequest(leechList.IndexOf(items[v])));
-                    }
-                }
-                Task.WaitAll(tasks);
-            }
-        }
-
-        private async void makeTaskRequest(int index)
-        {
-            WebContent source = new WebContent();
-            source = await getURLContentAsync(leechList[index].URL);
-
-            string content = System.Text.Encoding.Default.GetString(source.content);
-            leechList[index].Proxys.Add(content);
-            leechList[index].Date = DateTime.Now;
-            leechList[index].Count = source.content.Length;
-            leechList[index].Reply = source.status;
+            //leechStartButtonEnabled = true;
         }
 
         private async Task<WebContent> getURLContentAsync(string url)
         {
-            // http://msdn.microsoft.com/de-de/library/hh300224.aspx
             WebContent result = new WebContent();
             try
             {
                 var content = new MemoryStream();
                 var webReq = (HttpWebRequest)WebRequest.Create(url);
-                webReq.Timeout = Int32.Parse(leechModel.LeechTimeout) * 1000;
+                webReq.Timeout = Int32.Parse(leechTimeout) * 1000;
                 using (WebResponse response = await webReq.GetResponseAsync())
                 {
                     using (Stream responseStream = response.GetResponseStream())

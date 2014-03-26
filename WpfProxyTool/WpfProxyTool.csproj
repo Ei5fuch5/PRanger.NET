@@ -79,7 +79,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\ProxyLeecherModel.cs" />
+    <Compile Include="Model\LeecherModel.cs" />
+    <Compile Include="Model\ProxyLeechListModel.cs" />
     <Compile Include="Model\WebContent.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
