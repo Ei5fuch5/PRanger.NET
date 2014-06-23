@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,16 +24,16 @@ namespace WpfProxyTool.Model
             }
         }
 
-        private string url;
+        private string _url;
         public string URL
         {
             get
             {
-                return url;
+                return _url;
             }
             set
             {
-                url = value;
+                _url = value;
                 OnPropertyChanged("URL");
             }
         }

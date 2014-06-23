@@ -27,21 +27,21 @@ namespace WpfProxyTool.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        public ObservableCollection<ProxyLeechListModel> LeechList { get; set; }
-        public LeecherModel LeechModel { get; set; }
-        private static readonly object ListLock = new object();
+        public ObservableCollection<ProxyLeechListModel> leechList { get; set; }
+        public LeecherModel leechModel { get; set; }
+        private static object listLock = new object();
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         public MainViewModel()
         {
-            LeechList = new ObservableCollection<ProxyLeechListModel>();
-            BindingOperations.EnableCollectionSynchronization(LeechList, ListLock);
-            LeechModel = new LeecherModel();
-            LeechModel.LeechTimeout = "5";
-            LeechModel.LeechStartButtonEnabled = true;
-            LeechModel.ProgressBarEnabled = false;
+            leechList = new ObservableCollection<ProxyLeechListModel>();
+            BindingOperations.EnableCollectionSynchronization(leechList, listLock);
+            leechModel = new LeecherModel();
+            leechModel.LeechTimeout = "5";
+            leechModel.LeechStartButtonEnabled = true;
+            leechModel.ProgressBarEnabled = false;
 
             ////if (IsInDesignMode)
             ////{
@@ -53,39 +53,38 @@ namespace WpfProxyTool.ViewModel
             ////}
         }
 
-        private RelayCommand _openLeechListCommand;
+        private RelayCommand openLeechListCommand;
         public RelayCommand OpenLeechListCommand
         {
             get
             {
                 {
-                    if (_openLeechListCommand == null)
-                        _openLeechListCommand = new RelayCommand(new Action(OpenLeechListExecuted));
-                    return _openLeechListCommand;
+                    if (openLeechListCommand == null)
+                        openLeechListCommand = new RelayCommand(new Action(openLeechListExecuted));
+                    return openLeechListCommand;
                 }
             }
         }
 
-        private void OpenLeechListExecuted()
+        private void openLeechListExecuted()
         {
             System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
             ofd.InitialDirectory = @"C:\";
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Task.Factory.StartNew( () => ReadLeechFile(ofd.FileName));
+                Task.Factory.StartNew( () => readLeechFile(ofd.FileName));
                 //MessageBox.Show(ofd.FileName);
             }
         }
 
-        private void ReadLeechFile(String path)
+        private void readLeechFile(String path)
         {
             string file = System.IO.File.ReadAllText(path);
-            // http://regexlib.com/Search.aspx?k=url&AspxAutoDetectCookieSupport=1
             Regex regex = new Regex(@"(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?");
             MatchCollection matches = regex.Matches(file);
             foreach (Match match in matches)
             {
-                LeechList.Add(new ProxyLeechListModel
+                leechList.Add(new ProxyLeechListModel
                     {
                         URL = match.ToString()
                     }
@@ -93,54 +92,53 @@ namespace WpfProxyTool.ViewModel
             }
         }
 
-        private RelayCommand<DragEventArgs> _dataGridLeecherDropCommand;
+        private RelayCommand<DragEventArgs> dataGridLeecherDropCommand;
         public RelayCommand<DragEventArgs> DataGridLeecherDropCommand
         {
             get
             {
-                return _dataGridLeecherDropCommand ?? (_dataGridLeecherDropCommand = new RelayCommand<DragEventArgs>(DataGridLeecherDrop));
+                return dataGridLeecherDropCommand ?? (dataGridLeecherDropCommand = new RelayCommand<DragEventArgs>(dataGridLeecherDrop));
             }
         }
-        private void DataGridLeecherDrop(DragEventArgs e)
+        private void dataGridLeecherDrop(DragEventArgs e)
         {
-            // http://stackoverflow.com/questions/11671803/get-source-of-a-dragdrop
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            Task.Factory.StartNew(() => ReadLeechFile(files[0]));
+            Task.Factory.StartNew(() => readLeechFile(files[0]));
+            // do something here
         }
 
 
-        private RelayCommand _startLeechingCommand;
+        private RelayCommand startLeechingCommand;
         public RelayCommand StartLeechingCommand
         {
             get
             {
                 {
-                    if (_startLeechingCommand == null)
-                        _startLeechingCommand = new RelayCommand(new Action(StartLeechingExecuted));
-                    return _startLeechingCommand;
+                    if (startLeechingCommand == null)
+                        startLeechingCommand = new RelayCommand(new Action(startLeechingExecuted));
+                    return startLeechingCommand;
                 }
             }
         }
 
-        private void StartLeechingExecuted()
+        private void startLeechingExecuted()
         {
-            LeechModel.LeechStartButtonEnabled = false;
-            LeechModel.ProgressBarEnabled = true;
+            leechModel.LeechStartButtonEnabled = false;
+            leechModel.ProgressBarEnabled = true;
 
-            //TaskForEach(5);
-            ParallelForEach();
+            taskForEach(5);
+            //parallelForEach();
 
             //leechModel.ProgressBarEnabled = false;
             //leechStartButtonEnabled = true;
         }
 
-        private void ParallelForEach()
+        private void parallelForEach()
         {
-            // Solution? http://stackoverflow.com/questions/12337671/using-async-await-for-multiple-tasks
-            Parallel.ForEach(LeechList, async item =>
+            Parallel.ForEach(leechList, async item =>
                 {
                     WebContent source = new WebContent();
-                    source = await GetUrlContentAsync(item.URL);
+                    source = await getURLContentAsync(item.URL);
 
                     string content = System.Text.Encoding.Default.GetString(source.content);
                     item.Proxys.Add(content);
@@ -151,17 +149,15 @@ namespace WpfProxyTool.ViewModel
             );
         }
 
-        private void TaskForEach(int taskCount)
+        private void taskForEach(int taskCount)
         {
-            // http://msdn.microsoft.com/de-de/library/dd270695%28v=vs.110%29.aspx
-            // Problem mit Async
             //for (int i = 0; i < leechList.Count; i+=taskCount - 1)
             for (int i = 0; i < 4; i += 5)
             {
                 List<ProxyLeechListModel> items = new List<ProxyLeechListModel>();
                 for (int t = i; t < i + taskCount; t++)
                 {
-                    items.Add(LeechList[t]);
+                    items.Add(leechList[t]);
                 }
 
                 Task[] tasks = new Task[4];
@@ -171,35 +167,34 @@ namespace WpfProxyTool.ViewModel
                         MessageBox.Show("Ist 5!!!!");
                     if (v < items.Count)
                     {
-                        tasks[v] = new Task(() => MakeTaskRequest(LeechList.IndexOf(items[v])));
+                        tasks[v] = Task.Factory.StartNew(() => makeTaskRequest(leechList.IndexOf(items[v])));
                     }
                 }
                 Task.WaitAll(tasks);
             }
         }
 
-        private async void MakeTaskRequest(int index)
+        private async void makeTaskRequest(int index)
         {
             WebContent source = new WebContent();
-            source = await GetUrlContentAsync(LeechList[index].URL);
+            source = await getURLContentAsync(leechList[index].URL);
 
             string content = System.Text.Encoding.Default.GetString(source.content);
-            LeechList[index].Proxys.Add(content);
-            LeechList[index].Date = DateTime.Now;
-            LeechList[index].Count = source.content.Length;
-            LeechList[index].Reply = source.status;
+            leechList[index].Proxys.Add(content);
+            leechList[index].Date = DateTime.Now;
+            leechList[index].Count = source.content.Length;
+            leechList[index].Reply = source.status;
         }
 
-        private async Task<WebContent> GetUrlContentAsync(string url)
+        private async Task<WebContent> getURLContentAsync(string url)
         {
-            // http://msdn.microsoft.com/de-de/library/hh300224.aspx
-            var result = new WebContent();
+            WebContent result = new WebContent();
             try
             {
                 var content = new MemoryStream();
                 var webReq = (HttpWebRequest)WebRequest.Create(url);
-                webReq.Timeout = Int32.Parse(LeechModel.LeechTimeout) * 1000;
-                using (var response = await webReq.GetResponseAsync())
+                webReq.Timeout = Int32.Parse(leechModel.LeechTimeout) * 1000;
+                using (WebResponse response = await webReq.GetResponseAsync())
                 {
                     using (Stream responseStream = response.GetResponseStream())
                     {
@@ -225,22 +220,22 @@ namespace WpfProxyTool.ViewModel
             return result;
         }
 
-        private RelayCommand _clearLeechListCommand;
+        private RelayCommand clearLeechListCommand;
         public RelayCommand ClearLeechListCommand
         {
             get
             {
                 {
-                    if (_clearLeechListCommand == null)
-                        _clearLeechListCommand = new RelayCommand(new Action(ClearLeechListExecuted));
-                    return _clearLeechListCommand;
+                    if (clearLeechListCommand == null)
+                        clearLeechListCommand = new RelayCommand(new Action(ClearLeechListExecuted));
+                    return clearLeechListCommand;
                 }
             }
         }
 
         private void ClearLeechListExecuted()
         {
-            LeechList.Clear();
+            leechList.Clear();
         }
     }
 }

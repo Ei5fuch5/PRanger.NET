@@ -5,22 +5,18 @@
               xmlns:local="clr-namespace:WpfProxyTool.ViewModel"
               xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
               xmlns:cmd="http://www.galasoft.ch/mvvmlight"
-              Title="Proxyfighter.NET by Eisfuchs" 
+              Title="Proxyfighter by Eisfuchs" 
               Height="450" 
               Width="725" 
               Icon="../Images/ice.png" 
               MinHeight="450"
               MinWidth="725"
-              x:Name="MainWindow" 
+              x:Name="mainWindow" 
               BorderThickness="0" 
               Margin="1">
 
     <!--http://www.norberteder.com/windows-presentation-foundation-45-das-ribbon-steuerelement/-->
     <DockPanel LastChildFill="True">
-        
-        <DockPanel.Resources>
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        </DockPanel.Resources>
         
         <DockPanel.DataContext>
             <local:MainViewModel />
@@ -41,7 +37,7 @@
                     <RibbonApplicationMenuItem Header="Veröffentlichen"/>
                     <RibbonApplicationMenuItem Header="Drucken"/>
                     <RibbonApplicationMenuItem Header="Optionen"/>
-                    <RibbonApplicationMenuItem Header="Info" Name="BtnInfo" />
+                    <RibbonApplicationMenuItem Header="Info" Name="btnInfo" />
                     <RibbonApplicationMenuItem Header="Beenden" />
 
                     <RibbonApplicationMenu.FooterPaneContent>
@@ -70,7 +66,7 @@
                               SmallImageSource="../Images/help.png" />
             </Ribbon.HelpPaneContent>
 
-            <RibbonTab Header="Proxy Leecher" Name="TabLeecher">
+            <RibbonTab Header="Proxy Leecher">
                 <RibbonGroup Header="Clipboard and List">
                     <RibbonButton Label="Open List"
                                   LargeImageSource="../Images/Open.png"
@@ -106,18 +102,17 @@
                                   SmallImageSource="../Images/arrow_updown.png" />
                 </RibbonGroup>
             </RibbonTab>
-            
-            <RibbonTab Header="Proxylist" Name="TabList">
-                
+            <RibbonTab Header="Proxylist">
+
             </RibbonTab>
-            
             <RibbonTab Header="Blogkonto">
 
             </RibbonTab>
         </ribbon:Ribbon>
-        
-        <!--http://kentb.blogspot.de/2007/10/perfect-wpf-statusbar.html
-        <StatusBar DockPanel.Dock="Bottom">
+
+
+
+        <StatusBar DockPanel.Dock="Bottom" DataContext="{Binding Path=leechModel}">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -135,48 +130,41 @@
                 <TextBlock>Ready</TextBlock>
             </StatusBarItem>
             <StatusBarItem Grid.Column="1">
-                <ProgressBar Width="400" Height="20" IsIndeterminate="{Binding Path=ProgressBarEnabled}" Opacity="0.8" />
+                <ProgressBar Width="400" Height="20" IsIndeterminate="{Binding Path=LeechStartButtonEnabled}" Opacity="0.8" />
             </StatusBarItem>
-        </StatusBar>-->
+        </StatusBar>
 
-        <Grid Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=TabLeecher}" >
-             <!--Content...-->
-            <DataGrid x:Name="dataGridLeecher" 
+        <!--Content...-->
+        <DataGrid x:Name="dataGridLeecher" 
                     AllowDrop="True" 
                     AutoGenerateColumns="False"
-                    ItemsSource="{Binding Path=LeechList}"
+                    ItemsSource="{Binding Path=leechList}"
                     IsReadOnly="True" 
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
                     Height="Auto"
                     DockPanel.Dock="Top">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="URL" 
-                                        Width="200*"
-                                        MinWidth="200"
-                                        Binding="{Binding Path=URL, Mode=TwoWay}" />
-                    <DataGridTextColumn Header="Reply" 
-                                        Width="100" 
-                                        Binding="{Binding Path=Reply, Mode=OneWay}"/>
-                    <DataGridTextColumn Header="Proxy Count" 
-                                        Width="100" 
-                                        Binding="{Binding Path=Count, Mode=OneWay}"/>
-                    <DataGridTextColumn Header="Date" 
-                                        Width="150" 
-                                        Binding="{Binding Path=Date, StringFormat='dd.MM.yyyy HH:ss', Mode=OneWay}" />
-                </DataGrid.Columns>
-                <!--http://stackoverflow.com/questions/21998502/treeviewitem-mousedoubleclick-event-and-mvvmlight-->
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Drop">
-                        <cmd:EventToCommand Command="{Binding DataGridLeecherDropCommand}"
-                                            PassEventArgsToCommand="True" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </DataGrid>
-        </Grid>
-
-        <Grid Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=TabList}" >
-            <Calendar />
-        </Grid>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="URL" 
+                                    Width="200*"
+                                    MinWidth="200"
+                                    Binding="{Binding Path=URL, Mode=TwoWay}" />
+                <DataGridTextColumn Header="Reply" 
+                                    Width="100" 
+                                    Binding="{Binding Path=Reply, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Proxy Count" 
+                                    Width="100" 
+                                    Binding="{Binding Path=Count, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Date" 
+                                    Width="150" 
+                                    Binding="{Binding Path=Date, StringFormat='dd.MM.yyyy HH:ss', Mode=OneWay}" />
+            </DataGrid.Columns>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Drop">
+                    <cmd:EventToCommand Command="{Binding DataGridLeecherDropCommand}"
+                                        PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </DataGrid>
     </DockPanel>
 </RibbonWindow>

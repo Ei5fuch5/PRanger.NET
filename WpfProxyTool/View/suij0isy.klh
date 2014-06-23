@@ -3,24 +3,16 @@
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:ribbon="clr-namespace:System.Windows.Controls.Ribbon;assembly=System.Windows.Controls.Ribbon"
               xmlns:local="clr-namespace:WpfProxyTool.ViewModel"
-              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-              xmlns:cmd="http://www.galasoft.ch/mvvmlight"
-              Title="Proxyfighter.NET by Eisfuchs" 
+              Title="Proxyfighter by Eisfuchs" 
               Height="450" 
               Width="725" 
               Icon="../Images/ice.png" 
               MinHeight="450"
               MinWidth="725"
-              x:Name="MainWindow" 
-              BorderThickness="0" 
-              Margin="1">
+              x:Name="mainWindow">
 
     <!--http://www.norberteder.com/windows-presentation-foundation-45-das-ribbon-steuerelement/-->
     <DockPanel LastChildFill="True">
-        
-        <DockPanel.Resources>
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        </DockPanel.Resources>
         
         <DockPanel.DataContext>
             <local:MainViewModel />
@@ -41,7 +33,7 @@
                     <RibbonApplicationMenuItem Header="Veröffentlichen"/>
                     <RibbonApplicationMenuItem Header="Drucken"/>
                     <RibbonApplicationMenuItem Header="Optionen"/>
-                    <RibbonApplicationMenuItem Header="Info" Name="BtnInfo" />
+                    <RibbonApplicationMenuItem Header="Info" Name="btnInfo" />
                     <RibbonApplicationMenuItem Header="Beenden" />
 
                     <RibbonApplicationMenu.FooterPaneContent>
@@ -70,31 +62,28 @@
                               SmallImageSource="../Images/help.png" />
             </Ribbon.HelpPaneContent>
 
-            <RibbonTab Header="Proxy Leecher" Name="TabLeecher">
+            <RibbonTab Header="Proxy Leecher">
                 <RibbonGroup Header="Clipboard and List">
                     <RibbonButton Label="Open List"
                                   LargeImageSource="../Images/Open.png"
-                                  Command="{Binding Path=OpenLeechListCommand}" />
+                                  Command="{Binding Path=OpenLeechListCommand}"/>
                     <RibbonButton Label="Paste"
                                   LargeImageSource="../Images/paste.png" />
                     <RibbonButton Label="Delete All"
-                                  SmallImageSource="../Images/delete.png"
-                                  Command="{Binding Path=ClearLeechListCommand}" />
+                                  SmallImageSource="../Images/delete.png" />
                     <RibbonButton Label="Delete Selected"
                                   SmallImageSource="../Images/deleteSel.png" />
                 </RibbonGroup>
                 <RibbonGroup Header="Tool">
                     <RibbonButton Label="Start Leeching"
                                   Name="btnStartLeeching"
-                                  LargeImageSource="../Images/start.png"
-                                  Command="{Binding Path=StartLeechingCommand}"
-                                  IsEnabled="{Binding Path=LeechStartButtonEnabled}"/>
+                                  LargeImageSource="../Images/start.png" />
                     <RibbonButton Label="Stop"
                                   SmallImageSource="../Images/stop.png"
                                   IsEnabled="False"/>
                     <RibbonTextBox Label="Timeout:"
                                    TextBoxWidth="30"
-                                   Text="{Binding Path=LeechTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Text="5"
                                    TextAlignment="Right"/>
                 </RibbonGroup>
                 <RibbonGroup Header="List Options">
@@ -106,50 +95,23 @@
                                   SmallImageSource="../Images/arrow_updown.png" />
                 </RibbonGroup>
             </RibbonTab>
-            
-            <RibbonTab Header="Proxylist" Name="TabList">
-                
+            <RibbonTab Header="Proxylist">
+
             </RibbonTab>
-            
             <RibbonTab Header="Blogkonto">
 
             </RibbonTab>
         </ribbon:Ribbon>
-        
-        <!--http://kentb.blogspot.de/2007/10/perfect-wpf-statusbar.html
-        <StatusBar DockPanel.Dock="Bottom">
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="0">
-                <TextBlock>Ready</TextBlock>
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="1">
-                <ProgressBar Width="400" Height="20" IsIndeterminate="{Binding Path=ProgressBarEnabled}" Opacity="0.8" />
-            </StatusBarItem>
-        </StatusBar>-->
 
-        <Grid Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=TabLeecher}" >
-             <!--Content...-->
+        <DockPanel VerticalAlignment="Stretch"
+                   HorizontalAlignment="Stretch"
+                   Height="Auto">
+            <!--Content...-->
             <DataGrid x:Name="dataGridLeecher" 
-                    AllowDrop="True" 
-                    AutoGenerateColumns="False"
-                    ItemsSource="{Binding Path=LeechList}"
-                    IsReadOnly="True" 
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    Height="Auto"
-                    DockPanel.Dock="Top">
+                      AllowDrop="True" 
+                      AutoGenerateColumns="False"
+                      ItemsSource="{Binding Path=leechList}"
+                      IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="URL" 
                                         Width="200*"
@@ -163,20 +125,10 @@
                                         Binding="{Binding Path=Count, Mode=OneWay}"/>
                     <DataGridTextColumn Header="Date" 
                                         Width="150" 
-                                        Binding="{Binding Path=Date, StringFormat='dd.MM.yyyy HH:ss', Mode=OneWay}" />
+                                        Binding="{Binding Path=Date, StringFormat='dd.MM.yyyy hh:ss', Mode=OneWay}" />
                 </DataGrid.Columns>
-                <!--http://stackoverflow.com/questions/21998502/treeviewitem-mousedoubleclick-event-and-mvvmlight-->
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Drop">
-                        <cmd:EventToCommand Command="{Binding DataGridLeecherDropCommand}"
-                                            PassEventArgsToCommand="True" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                
             </DataGrid>
-        </Grid>
-
-        <Grid Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=TabList}" >
-            <Calendar />
-        </Grid>
+        </DockPanel>
     </DockPanel>
-</RibbonWindow>
+    </RibbonWindow>
