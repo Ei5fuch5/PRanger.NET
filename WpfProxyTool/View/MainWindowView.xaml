@@ -83,7 +83,7 @@
                     <RibbonButton Label="Delete Selected"
                                   SmallImageSource="../Images/deleteSel.png" />
                 </RibbonGroup>
-                <RibbonGroup Header="Tool">
+                <RibbonGroup Header="Check">
                     <RibbonButton Label="Start Leeching"
                                   Name="btnStartLeeching"
                                   LargeImageSource="../Images/start.png"
@@ -106,12 +106,46 @@
                                   SmallImageSource="../Images/arrow_updown.png" />
                 </RibbonGroup>
             </RibbonTab>
-            
+
             <RibbonTab Header="Proxylist" Name="TabList">
+                <RibbonGroup Header="Clipboard and List">
+                    <RibbonButton Label="Open List"
+                                  LargeImageSource="../Images/Open.png"
+                                  Command="{Binding Path=OpenProxyListCommand}" />
+                    <RibbonButton Label="Paste"
+                                  LargeImageSource="../Images/paste.png" />
+                    <RibbonButton Label="Delete All"
+                                  SmallImageSource="../Images/delete.png"
+                                  Command="{Binding Path=ClearProxyListCommand}" />
+                    <RibbonButton Label="Delete Selected"
+                                  SmallImageSource="../Images/deleteSel.png" />
+                </RibbonGroup>
                 
+                <RibbonGroup Header="Check">
+                    <RibbonButton Label="Start Check"
+                                  Name="btnStartChecking"
+                                  LargeImageSource="../Images/start.png"
+                                  Command="{Binding Path=StartCheckingCommand}"/>
+                    <RibbonButton Label="Stop"
+                                  SmallImageSource="../Images/stop.png"
+                                  IsEnabled="False"/>
+                    <RibbonTextBox Label="Timeout:"
+                                   TextBoxWidth="30"
+                                   Text="{Binding Path=CheckTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   TextAlignment="Right"/>
+                </RibbonGroup>
+                
+                <RibbonGroup Header="List Options">
+                    <RibbonButton Label="Order by IP"
+                                  SmallImageSource="../Images/arrow_updown.png" />
+                    <RibbonButton Label="Order by Type"
+                                  SmallImageSource="../Images/arrow_updown.png" />
+                    <RibbonButton Label="Order by Reply"
+                                  SmallImageSource="../Images/arrow_updown.png" />
+                </RibbonGroup>
             </RibbonTab>
             
-            <RibbonTab Header="Blogkonto">
+            <RibbonTab Header="Blank">
 
             </RibbonTab>
         </ribbon:Ribbon>
@@ -176,7 +210,36 @@
         </Grid>
 
         <Grid Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=TabList}" >
-            <Calendar />
+            <DataGrid x:Name="dataGridProxys"
+                      AutoGenerateColumns="False"
+                      ItemsSource="{Binding Path=ProxyList}"
+                      IsReadOnly="True"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Stretch"
+                      DockPanel.Dock="Top">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="IP"
+                                        Width="200"
+                                        MinWidth="200"
+                                        Binding="{Binding Path=IP}" />
+                    <DataGridTextColumn Header="Port"
+                                        Width="40"
+                                        MinWidth="40"
+                                        Binding="{Binding Path=Port}" />
+                    <DataGridTextColumn Header="Anonym"
+                                        Width="50"
+                                        MinWidth="50"
+                                        Binding="{Binding Path=Anonym}" />
+                    <DataGridTextColumn Header="Ping"
+                                        Width="50"
+                                        MinWidth="50"
+                                        Binding="{Binding Path=Ping}" />
+                    <DataGridTextColumn Header="Speed"
+                                        Width="50"
+                                        MinWidth="50"
+                                        Binding="{Binding Path=Speed}" />
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </DockPanel>
 </RibbonWindow>

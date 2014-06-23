@@ -28,6 +28,7 @@ namespace WpfProxyTool.ViewModel
     public class MainViewModel : ViewModelBase
     {
         public ObservableCollection<ProxyLeechListModel> LeechList { get; set; }
+        public ObservableCollection<Proxy> ProxyList { get; set; }
         public LeecherModel LeechModel { get; set; }
         private static readonly object ListLock = new object();
 
@@ -38,6 +39,10 @@ namespace WpfProxyTool.ViewModel
         {
             LeechList = new ObservableCollection<ProxyLeechListModel>();
             BindingOperations.EnableCollectionSynchronization(LeechList, ListLock);
+
+            ProxyList = new ObservableCollection<Proxy>();
+            BindingOperations.EnableCollectionSynchronization(ProxyList, ListLock);
+
             LeechModel = new LeecherModel();
             LeechModel.LeechTimeout = "5";
             LeechModel.LeechStartButtonEnabled = true;
@@ -72,7 +77,7 @@ namespace WpfProxyTool.ViewModel
             ofd.InitialDirectory = @"C:\";
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Task.Factory.StartNew( () => ReadLeechFile(ofd.FileName));
+                Task.Factory.StartNew(() => ReadLeechFile(ofd.FileName));
                 //MessageBox.Show(ofd.FileName);
             }
         }
@@ -143,9 +148,14 @@ namespace WpfProxyTool.ViewModel
                     source = await GetUrlContentAsync(item.URL);
 
                     string content = System.Text.Encoding.Default.GetString(source.content);
+                    List<Proxy> proxys = GetIpsFromContent(content);
+                    foreach (var ip in proxys)
+                    {
+                        ProxyList.Add(ip);
+                    }                    
                     item.Proxys.Add(content);
                     item.Date = DateTime.Now;
-                    item.Count = source.content.Length;
+                    item.Count = proxys.Count;
                     item.Reply = source.status;
                 }
             );
@@ -154,7 +164,7 @@ namespace WpfProxyTool.ViewModel
         private void TaskForEach(int taskCount)
         {
             // http://msdn.microsoft.com/de-de/library/dd270695%28v=vs.110%29.aspx
-            // Problem mit Async
+            // Problem with Async; Not Working as expected
             //for (int i = 0; i < leechList.Count; i+=taskCount - 1)
             for (int i = 0; i < 4; i += 5)
             {
@@ -167,8 +177,8 @@ namespace WpfProxyTool.ViewModel
                 Task[] tasks = new Task[4];
                 for (int v = 0; v < taskCount - 1; v++)
                 {
-                    if (v == 5 ) 
-                        MessageBox.Show("Ist 5!!!!");
+                    if (v == 5)
+                        MessageBox.Show("Is 5.");
                     if (v < items.Count)
                     {
                         tasks[v] = new Task(() => MakeTaskRequest(LeechList.IndexOf(items[v])));
@@ -241,6 +251,43 @@ namespace WpfProxyTool.ViewModel
         private void ClearLeechListExecuted()
         {
             LeechList.Clear();
+        }
+
+        private List<Proxy> GetIpsFromContent(string content)
+        {
+            // http://www.regular-expressions.info/examples.html
+            Regex regex = new Regex(@"\b(?:\d{1,3}\.){3}\d{1,3}:[0-9]{1,5}\b");
+            MatchCollection matches = regex.Matches(content);
+
+            List<Proxy> proxys = new List<Proxy>();
+            foreach (Match match in matches)
+            {
+                Proxy p = new Proxy
+                {
+                    // Proxys default values
+                    Ping = 0,
+                    Speed = 0
+                };
+
+                string m = match.ToString();
+                if (m.Contains(":"))
+                {
+                    p.IP = m.Substring(0, m.IndexOf(':'));
+                    p.Port = m.Substring(m.IndexOf(':') + 1);
+                }
+                else
+                {
+                    p.IP = m;
+                    // Default HTTP Port for Proxys with no Port found
+                    p.Port = "80";
+                }
+
+                if (!proxys.Exists(v => v.IP == p.IP))
+                {
+                    proxys.Add(p);
+                }
+            }
+            return proxys;
         }
     }
 }
