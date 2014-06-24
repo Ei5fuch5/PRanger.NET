@@ -88,6 +88,9 @@ namespace WpfProxyTool.ViewModel
 
         private void ReadLeechFile(String path)
         {
+            // Clear the list before reading a new file
+            LeechList.Clear();
+
             string file = System.IO.File.ReadAllText(path);
             // http://regexlib.com/Search.aspx?k=url&AspxAutoDetectCookieSupport=1
             Regex regex = new Regex(@"(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?");
