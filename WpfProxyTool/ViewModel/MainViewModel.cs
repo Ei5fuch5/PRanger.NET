@@ -144,7 +144,7 @@ namespace WpfProxyTool.ViewModel
             ParallelForEach();
 
             //leechModel.ProgressBarEnabled = false;
-            //leechStartButtonEnabled = true;
+            LeechModel.LeechStartButtonEnabled = true;
         }
 
         // Fasted method to query the data
@@ -152,21 +152,21 @@ namespace WpfProxyTool.ViewModel
         {
             // Solution? http://stackoverflow.com/questions/12337671/using-async-await-for-multiple-tasks
             Parallel.ForEach(LeechList, async item =>
-                {
-                    WebContent source = new WebContent();
-                    source = await GetUrlContentAsync(item.URL);
+            {
+                WebContent source = new WebContent();
+                source = await GetUrlContentAsync(item.URL);
 
-                    string content = System.Text.Encoding.Default.GetString(source.content);
-                    List<Proxy> proxys = GetIpsFromContent(content);
-                    foreach (var ip in proxys)
-                    {
-                        ProxyList.Add(ip);
-                    }                    
-                    // item.Proxys.Add(content);
-                    item.Date = DateTime.Now;
-                    item.Count = proxys.Count;
-                    item.Reply = source.status;
+                string content = System.Text.Encoding.Default.GetString(source.content);
+                List<Proxy> proxys = GetIpsFromContent(content);
+                foreach (var ip in proxys)
+                {
+                    ProxyList.Add(ip);
                 }
+                // item.Proxys.Add(content);
+                item.Date = DateTime.Now;
+                item.Count = proxys.Count;
+                item.Reply = source.status;
+            }
             );
         }
 

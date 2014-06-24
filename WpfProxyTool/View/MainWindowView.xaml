@@ -89,7 +89,7 @@
                                   Name="btnStartLeeching"
                                   LargeImageSource="../Images/start.png"
                                   Command="{Binding Path=StartLeechingCommand}"
-                                  IsEnabled="{Binding Path=LeechStartButtonEnabled}"/>
+                                  IsEnabled="{Binding Path=LeechModel.LeechStartButtonEnabled}"/>
                     <RibbonButton Label="Stop"
                                   SmallImageSource="../Images/stop.png"
                                   IsEnabled="False"/>
