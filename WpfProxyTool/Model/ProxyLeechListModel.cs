@@ -82,5 +82,7 @@ namespace WpfProxyTool.Model
                 OnPropertyChanged("Date");
             }
         }
+
+        public bool IsSelected { get; set; }
     }
 }

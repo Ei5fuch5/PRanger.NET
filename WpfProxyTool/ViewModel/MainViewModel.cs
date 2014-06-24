@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.IO;
 using System.Net;
+using System.Collections;
 
 namespace WpfProxyTool.ViewModel
 {
@@ -31,6 +32,7 @@ namespace WpfProxyTool.ViewModel
         public ObservableCollection<Proxy> ProxyList { get; set; }
         public LeecherModel LeechModel { get; set; }
         private static readonly object ListLock = new object();
+        private List<ProxyLeechListModel> SelectedUrls;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -42,6 +44,8 @@ namespace WpfProxyTool.ViewModel
 
             ProxyList = new ObservableCollection<Proxy>();
             BindingOperations.EnableCollectionSynchronization(ProxyList, ListLock);
+
+            SelectedUrls = new List<ProxyLeechListModel>();
 
             LeechModel = new LeecherModel();
             LeechModel.LeechTimeout = "5";
@@ -106,6 +110,7 @@ namespace WpfProxyTool.ViewModel
                 return _dataGridLeecherDropCommand ?? (_dataGridLeecherDropCommand = new RelayCommand<DragEventArgs>(DataGridLeecherDrop));
             }
         }
+
         private void DataGridLeecherDrop(DragEventArgs e)
         {
             // http://stackoverflow.com/questions/11671803/get-source-of-a-dragdrop
@@ -153,7 +158,7 @@ namespace WpfProxyTool.ViewModel
                     {
                         ProxyList.Add(ip);
                     }                    
-                    item.Proxys.Add(content);
+                    // item.Proxys.Add(content);
                     item.Date = DateTime.Now;
                     item.Count = proxys.Count;
                     item.Reply = source.status;
@@ -194,7 +199,7 @@ namespace WpfProxyTool.ViewModel
             source = await GetUrlContentAsync(LeechList[index].URL);
 
             string content = System.Text.Encoding.Default.GetString(source.content);
-            LeechList[index].Proxys.Add(content);
+            // LeechList[index].Proxys.Add(content);
             LeechList[index].Date = DateTime.Now;
             LeechList[index].Count = source.content.Length;
             LeechList[index].Reply = source.status;
@@ -288,6 +293,54 @@ namespace WpfProxyTool.ViewModel
                 }
             }
             return proxys;
+        }
+
+        private RelayCommand<IList> _leechListSelectionChangedCommand;
+        public RelayCommand<IList> LeechListSelectionChangedCommand
+        {
+            get
+            {
+                return _leechListSelectionChangedCommand ?? (_leechListSelectionChangedCommand = new RelayCommand<IList>(LeechListSelectionChanged));
+            }
+        }
+
+        private void LeechListSelectionChanged(IList items)
+        {
+            SelectedUrls.Clear();
+            foreach (var item in items)
+            {
+                SelectedUrls.Add((ProxyLeechListModel)item);
+            }
+        }
+
+        private RelayCommand _clearSelectedLeechListCommand;
+        public RelayCommand ClearSelectedLeechListCommand
+        {
+            get
+            {
+                {
+                    if (_clearSelectedLeechListCommand == null)
+                        _clearSelectedLeechListCommand = new RelayCommand(new Action(ClearSelectedLeechListExecuted));
+                    return _clearSelectedLeechListCommand;
+                }
+            }
+        }
+
+        private void ClearSelectedLeechListExecuted()
+        {
+            ObservableCollection<ProxyLeechListModel> temp = new ObservableCollection<ProxyLeechListModel>();
+            foreach (var item in LeechList)
+            {
+                if (!SelectedUrls.Contains(item))
+                {
+                    temp.Add(item);
+                }
+            }
+            LeechList.Clear();
+            foreach (var item in temp)
+            {
+                LeechList.Add(item);
+            }
         }
     }
 }

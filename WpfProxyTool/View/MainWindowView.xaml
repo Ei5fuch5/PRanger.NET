@@ -81,7 +81,8 @@
                                   SmallImageSource="../Images/delete.png"
                                   Command="{Binding Path=ClearLeechListCommand}" />
                     <RibbonButton Label="Delete Selected"
-                                  SmallImageSource="../Images/deleteSel.png" />
+                                  SmallImageSource="../Images/deleteSel.png"
+                                  Command="{Binding Path=ClearSelectedLeechListCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Check">
                     <RibbonButton Label="Start Leeching"
@@ -204,6 +205,10 @@
                     <i:EventTrigger EventName="Drop">
                         <cmd:EventToCommand Command="{Binding DataGridLeecherDropCommand}"
                                             PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <cmd:EventToCommand Command="{Binding LeechListSelectionChangedCommand, Mode=OneWay}"
+                                            CommandParameter="{Binding SelectedItems, ElementName=dataGridLeecher}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </DataGrid>
