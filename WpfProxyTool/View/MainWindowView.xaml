@@ -95,7 +95,7 @@
                                   IsEnabled="False"/>
                     <RibbonTextBox Label="Timeout:"
                                    TextBoxWidth="30"
-                                   Text="{Binding Path=LeechTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Text="{Binding Path=LeechModel.LeechTimeout, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    TextAlignment="Right"/>
                 </RibbonGroup>
                 <RibbonGroup Header="List Options">

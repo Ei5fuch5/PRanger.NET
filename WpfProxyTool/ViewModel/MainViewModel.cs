@@ -147,6 +147,7 @@ namespace WpfProxyTool.ViewModel
             //leechStartButtonEnabled = true;
         }
 
+        // Fasted method to query the data
         private void ParallelForEach()
         {
             // Solution? http://stackoverflow.com/questions/12337671/using-async-await-for-multiple-tasks
