@@ -5,7 +5,7 @@
               xmlns:local="clr-namespace:WpfProxyTool.ViewModel"
               xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
               xmlns:cmd="http://www.galasoft.ch/mvvmlight"
-              Title="Proxyfighter.NET by Eisfuchs" 
+              Title="PRanger" 
               Height="450" 
               Width="725" 
               Icon="../Images/ice.png" 
@@ -76,7 +76,8 @@
                                   LargeImageSource="../Images/Open.png"
                                   Command="{Binding Path=OpenLeechListCommand}" />
                     <RibbonButton Label="Paste"
-                                  LargeImageSource="../Images/paste.png" />
+                                  LargeImageSource="../Images/paste.png"
+                                  Command="{Binding Path=PasteLeechListCommand}"/>
                     <RibbonButton Label="Delete All"
                                   SmallImageSource="../Images/delete.png"
                                   Command="{Binding Path=ClearLeechListCommand}" />

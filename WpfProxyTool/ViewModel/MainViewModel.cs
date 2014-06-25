@@ -81,17 +81,16 @@ namespace WpfProxyTool.ViewModel
             ofd.InitialDirectory = @"C:\";
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Task.Factory.StartNew(() => ReadLeechFile(ofd.FileName));
+                Task.Factory.StartNew(() => ReadLeechFile(System.IO.File.ReadAllText(ofd.FileName)));
                 //MessageBox.Show(ofd.FileName);
             }
         }
 
-        private void ReadLeechFile(String path)
+        private void ReadLeechFile(String file)
         {
             // Clear the list before reading a new file
             LeechList.Clear();
 
-            string file = System.IO.File.ReadAllText(path);
             // http://regexlib.com/Search.aspx?k=url&AspxAutoDetectCookieSupport=1
             Regex regex = new Regex(@"(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?");
             MatchCollection matches = regex.Matches(file);
@@ -345,6 +344,24 @@ namespace WpfProxyTool.ViewModel
             {
                 LeechList.Add(item);
             }
+        }
+
+        private RelayCommand _pasteLeechListCommand;
+        public RelayCommand PasteLeechListCommand
+        {
+            get
+            {
+                {
+                    if (_pasteLeechListCommand == null)
+                        _pasteLeechListCommand = new RelayCommand(new Action(PasteLeechListExecuted));
+                    return _pasteLeechListCommand;
+                }
+            }
+        }
+
+        private void PasteLeechListExecuted()
+        {
+            ReadLeechFile(Clipboard.GetText());
         }
     }
 }
