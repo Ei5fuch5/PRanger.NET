@@ -27,6 +27,7 @@
         </DockPanel.DataContext>
 
         <ribbon:Ribbon DockPanel.Dock="Top">
+            <!--Currently the content is just for demo and howto-->
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="../Images/AppMenu.png" >
                     <RibbonApplicationMenuItem Header="Neuer Beitrag"
